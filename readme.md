@@ -6,10 +6,10 @@ python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip
 
-# install core requirements
-pip3 install -r ../libs/requirements.txt
+# install tvzvezda core requirements
+pip3 install -r ../../tvzvezda/libs/requirements.txt
 
-# install corpus control requirements
+# install tags graph requirements
 pip3 install -r ./requirements.txt
 ```
 

@@ -23,10 +23,8 @@ def indexing(
     if not ignored_tags:
         ignored_tags = get_ignore_tags()
 
-    corpus = read_corpus()
-
     # Build all tags list
-    all_tags = [tag for item in corpus for tag in item['tags'] if tag not in ignored_tags]
+    all_tags = [tag for item in read_corpus() for tag in item['tags'] if tag not in ignored_tags]
 
     # Build index tags
     # indexing_tags = tuple(set(all_tags))
@@ -42,8 +40,9 @@ def indexing(
     print(len(formatted_tags))
 
     # count tags connection
-    for idx, item in enumerate(corpus):
+    for idx, item in enumerate(read_corpus()):
         for tag1, tag2 in itertools.combinations(item['tags'], 2):
+
             if (tag1, tag2) in formatted_tags.keys():
                 formatted_tags[(tag1, tag2)][0] += 1
                 formatted_tags[(tag1, tag2)][1].append(idx)
@@ -53,7 +52,7 @@ def indexing(
         if v[0] < 2:
             del formatted_tags[k]
 
-    with open('analysis.pickle', 'wb') as in_file:
+    with open('index.pickle', 'wb') as in_file:
         pickle.dump(formatted_tags, in_file)
 
 

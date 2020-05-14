@@ -22,7 +22,7 @@ class Corpus:
     @property
     def corpus_tags_index(self):
         if self.__corpus_tags_index is None:
-            with open('analysis.pickle', 'rb') as out_file:
+            with open('index.pickle', 'rb') as out_file:
                 self.__corpus_tags_index = pickle.load(out_file)
 
         return self.__corpus_tags_index

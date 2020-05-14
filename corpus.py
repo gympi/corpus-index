@@ -11,8 +11,10 @@ from os import listdir
 from os.path import isfile, join
 
 
+import pickle
+
 # BEGIN Connection of the library with restrictions on the right to use
-sys.path.append('../libs/')
+sys.path.append('../../tvzvezda/libs/')
 try:
     from tvzvezdaru_corpus_entity import ObjectsIndexStorage, ObjectIndexSerializer
 except:
@@ -20,7 +22,7 @@ except:
 # END
 
 
-ROOT_DIR = './corpus'
+CORPUS_DIR = './corpus'
 
 START_DATE = datetime.date(2020, 1, 1)
 END_DATE = datetime.date.today()
@@ -43,11 +45,15 @@ def clear_corpus():
     """
     Remove all files in corpus dir
     """
-    if not os.path.exists(ROOT_DIR):
-        os.mkdir(ROOT_DIR)
+    if os.path.exists(CORPUS_DIR):
+        for f in [f for f in os.listdir(CORPUS_DIR)]:
+            os.remove(os.path.join(CORPUS_DIR, f))
 
-    for f in [f for f in os.listdir(ROOT_DIR)]:
-        os.remove(os.path.join(ROOT_DIR, f))
+
+class ObjectIndexSerializerExtend(ObjectIndexSerializer):
+    def tags(self):
+        # Convert tags to lower case
+        return [tag.lower() for tag in super().tags()]
 
 
 def build_corpus():
@@ -58,16 +64,15 @@ def build_corpus():
     for date in get_month_range(START_DATE, END_DATE):
         result = objects_index_storage.get_objects(date, date + relativedelta(months=1))
 
-        if not os.path.exists(ROOT_DIR):
-            os.mkdir(ROOT_DIR)
+        if not os.path.exists(CORPUS_DIR):
+            os.mkdir(CORPUS_DIR)
 
-        with open(f'{ROOT_DIR}/{date.strftime("%Y-%m-%d")}.txt', 'a') as in_file:
-            for item in result:
-                # Ыукшфдшсу
-                data = ObjectIndexSerializer(item).marshal()
-                # Convert tags to lower case
-                data['tags'] = [tag.lower() for tag in data['tags']]
-                in_file.write(f'{json.dumps(data, default=str)}\n')
+        # Serialize all list entities
+        serialized_result = [ObjectIndexSerializerExtend(item).marshal() for item in result]
+
+        # Save result to a pickle format
+        with open(os.path.join(CORPUS_DIR, f'{date.strftime("%Y-%m-%d")}.pickle'), 'wb') as in_file:
+            pickle.dump(serialized_result, in_file)
 
 
 def read_large_file(file_object: IO) -> Generator[str, None, None]:
@@ -81,13 +86,13 @@ def read_large_file(file_object: IO) -> Generator[str, None, None]:
         yield data
 
 
-def read_corpus():
-    files = [f for f in listdir(ROOT_DIR) if isfile(join(ROOT_DIR, f))]
+def read_corpus() -> Generator[dict, None, None]:
+    files = [f for f in listdir(CORPUS_DIR) if isfile(join(CORPUS_DIR, f))]
 
     for _file in files:
-        with open(join(ROOT_DIR, _file), 'r') as out_file:
-            for out in read_large_file(out_file):
-                yield json.loads(out, strict=False)
+        with open(join(CORPUS_DIR, _file), 'rb') as out_file:
+            for out in pickle.load(out_file):
+                yield out
 
 
 def print_corpus(template: str):
