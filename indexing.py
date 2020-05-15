@@ -40,12 +40,12 @@ def indexing(
     print(len(formatted_tags))
 
     # count tags connection
-    for idx, item in enumerate(read_corpus()):
+    for item in read_corpus():
         for tag1, tag2 in itertools.combinations(item['tags'], 2):
 
             if (tag1, tag2) in formatted_tags.keys():
                 formatted_tags[(tag1, tag2)][0] += 1
-                formatted_tags[(tag1, tag2)][1].append(idx)
+                formatted_tags[(tag1, tag2)][1].append(item['id'])
 
     # filtering pairs with zero count
     for k, v in formatted_tags.copy().items():

@@ -35,7 +35,7 @@ def search(corpus, tags_index, searched_item):
     for idx in result:
         found_result.append({'idx': idx, **corpus[idx]})
 
-    return tuple(filter(lambda i: i['title'] != searched_item['title'], found_result))
+    return tuple(filter(lambda i: i['id'] != searched_item['id'], found_result))
 
 
 class IndexHandler(tornado.web.RequestHandler):
@@ -74,5 +74,5 @@ def read_tags_index():
 
 def make_app():
     return tornado.web.Application([
-        (r"/(\d+)?", IndexHandler, dict(corpus=list(read_corpus()), tags_index=read_tags_index())),
+        (r"/(\d+)?", IndexHandler, dict(corpus={item['id']: item for item in read_corpus()}, tags_index=read_tags_index())),
     ])

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import uuid
 from typing import IO, Generator
 import json
 import os
@@ -71,7 +72,9 @@ def build_corpus():
             os.mkdir(CORPUS_DIR)
 
         # Serialize all list entities
-        serialized_result = [ObjectIndexSerializerExtend(item).marshal() for item in result]
+        serialized_result = [
+            {'id': idx, **ObjectIndexSerializerExtend(item).marshal()} for idx, item in enumerate(result)
+        ]
 
         # Save result to a pickle format
         with open(os.path.join(CORPUS_DIR, f'{date.strftime("%Y-%m-%d")}.pickle'), 'wb') as in_file:
