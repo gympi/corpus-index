@@ -7,7 +7,7 @@ from dashboard.server import make_app
 
 define('listen_address', group='webserver', default='127.0.0.1', help='Listen address')
 define('listen_port', group='webserver', default=8095, help='Listen port')
-define('unix_socket', group='webserver', default='/tmp/tags-graph.socket', help='Path to unix socket to bind')
+define('unix_socket', group='webserver', default=None, help='Path to unix socket to bind')
 
 if __name__ == "__main__":
     app = make_app()
