@@ -2,12 +2,25 @@
 import itertools
 import pickle
 import random
+from os import listdir
+from os.path import isfile, join
+from typing import Generator
 
 import tornado.ioloop
 import tornado.web
 import tornado.httpserver
 
-from corpus import read_corpus
+
+CORPUS_DIR = './corpus'
+
+
+def read_corpus() -> Generator[dict, None, None]:
+    files = [f for f in listdir(CORPUS_DIR) if isfile(join(CORPUS_DIR, f))]
+
+    for _file in files:
+        with open(join(CORPUS_DIR, _file), 'rb') as out_file:
+            for out in pickle.load(out_file):
+                yield out
 
 
 def search(corpus, tags_index, searched_item):
