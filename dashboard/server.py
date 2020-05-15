@@ -27,7 +27,6 @@ def search(corpus, tags_index, searched_item):
     result = list()
     for tag1, tag2 in itertools.combinations(searched_item['tags'], 2):
         if (tag1, tag2) in tags_index.keys():
-
             for item_id in tags_index[(tag1, tag2)][1]:
                 result.append({'id': item_id, 'find_tags': (tag1, tag2)})
 
@@ -35,7 +34,7 @@ def search(corpus, tags_index, searched_item):
     for item in result:
         found_result.append({'find_tags': item['find_tags'], **corpus[item['id']]})
 
-    return tuple(filter(lambda i: i['id'] != searched_item['id'], found_result))
+    return {v['id']: v for v in found_result if v['id'] != searched_item['id']}.values()
 
 
 class IndexHandler(tornado.web.RequestHandler):

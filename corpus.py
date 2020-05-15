@@ -65,6 +65,8 @@ def build_corpus():
 
     objects_index_storage = ObjectsIndexStorage()
 
+    index_start = 0
+
     for date in get_month_range(START_DATE, END_DATE):
         result = objects_index_storage.get_objects(date, date + relativedelta(months=1))
 
@@ -73,9 +75,10 @@ def build_corpus():
 
         # Serialize all list entities
         serialized_result = [
-            {'id': idx, **ObjectIndexSerializerExtend(item).marshal()} for idx, item in enumerate(result)
+            {'id': idx, **ObjectIndexSerializerExtend(item).marshal()} for idx, item in enumerate(result, index_start)
         ]
 
+        index_start += len(serialized_result)+1
         # Save result to a pickle format
         with open(os.path.join(CORPUS_DIR, f'{date.strftime("%Y-%m-%d")}.pickle'), 'wb') as in_file:
             pickle.dump(serialized_result, in_file)
