@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    <style>
+        /* Move down content because we have a fixed navbar that is 3.5rem tall */
+        body {
+          padding-top: 3.5rem;
+        }
+    </style>
     <title>Search articles</title>
 </head>
 <body>
@@ -32,7 +37,7 @@
 
     <div class="jumbotron">
         <div class="container">
-            <h3 class="display-5">{{searched_article['title']}}</h3>
+            <h4 class="display-5">{{searched_article['title']}}</h4>
             <p>{{searched_article['anons']}}</p>
             <p>{{', '.join(searched_article['tags'])}}</p>
             <p><span class="glyphicon glyphicon-refresh"></span><a class="btn btn-primary" href="/" role="button">Random
@@ -43,9 +48,9 @@
     <div class="container">
 
         {% for item in found_articles %}
-        <div class="row">
-            <div>
-                <h2>{{item['title']}}</h2>
+        <div class="row mx-md-n5">
+            <div class="col px-md-5">
+                <h4>{{item['title']}}</h4>
                 <p>{{item['anons']}}</p>
                 <p>{{', '.join(item['tags'])}}</p>
                 <p><a class="btn btn-secondary" href="/{{item['idx']}}" role="button">Search »</a></p>
