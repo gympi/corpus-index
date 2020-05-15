@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+import itertools
+import pickle
+import random
+
+import tornado.ioloop
+import tornado.web
+import tornado.httpserver
+
+from corpus import read_corpus
+
+
+def search(corpus, tags_index, searched_item):
+    result = set()
+    for tag1, tag2 in itertools.combinations(searched_item['tags'], 2):
+        if (tag1, tag2) in tags_index.keys():
+
+            for item_id in tags_index[(tag1, tag2)][1]:
+                result.add(item_id)
+
+    found_result = []
+    for idx in result:
+        found_result.append({'idx': idx, **corpus[idx]})
+
+    return tuple(filter(lambda i: i['title'] != searched_item['title'], found_result))
+
+
+class IndexHandler(tornado.web.RequestHandler):
+    def initialize(self, corpus, tags_index):
+        self.corpus = corpus
+        self.tags_index = tags_index
+
+    def get(self, idx=None):
+        try:
+            searched_article = self.corpus[int(idx)]
+        except:
+            searched_article = random.choice(self.corpus)
+
+        found_articles = search(self.corpus, self.tags_index, searched_article)
+
+        self.on_write_page('index.html', {
+            'searched_article': searched_article,
+            'found_articles': found_articles
+        })
+
+    def on_write_page(self, template: str, params: dict = None, templates_path: str = None, ):
+        if templates_path is None:
+            templates_path = './dashboard'
+
+        if params is None:
+            params = dict()
+
+        loader = tornado.template.Loader(templates_path)
+        self.write(loader.load(template).generate(**params))
+
+
+def read_tags_index():
+    with open('./index.pickle', 'rb') as out_file:
+        return pickle.load(out_file)
+
+
+def make_app():
+    return tornado.web.Application([
+        (r"/(\d+)?", IndexHandler, dict(corpus=list(read_corpus()), tags_index=read_tags_index())),
+    ])

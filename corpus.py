@@ -57,6 +57,9 @@ class ObjectIndexSerializerExtend(ObjectIndexSerializer):
 
 
 def build_corpus():
+    """
+    Build data corpus and saves it in files broken down by date
+    """
     clear_corpus()
 
     objects_index_storage = ObjectsIndexStorage()
