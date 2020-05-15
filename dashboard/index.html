@@ -52,8 +52,9 @@
             <div class="col px-md-5">
                 <h4>{{item['title']}}</h4>
                 <p>{{item['anons']}}</p>
+                <p>Find tags: {{', '.join(item['find_tags'])}}</p>
                 <p>{{', '.join(item['tags'])}}</p>
-                <p><a class="btn btn-secondary" href="/{{item['idx']}}" role="button">Search »</a></p>
+                <p><a class="btn btn-secondary" href="/{{item['id']}}" role="button">Search »</a></p>
             </div>
         </div>
         <hr>

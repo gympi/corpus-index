@@ -24,16 +24,16 @@ def read_corpus() -> Generator[dict, None, None]:
 
 
 def search(corpus, tags_index, searched_item):
-    result = set()
+    result = list()
     for tag1, tag2 in itertools.combinations(searched_item['tags'], 2):
         if (tag1, tag2) in tags_index.keys():
 
             for item_id in tags_index[(tag1, tag2)][1]:
-                result.add(item_id)
+                result.append({'id': item_id, 'find_tags': (tag1, tag2)})
 
     found_result = []
-    for idx in result:
-        found_result.append({'idx': idx, **corpus[idx]})
+    for item in result:
+        found_result.append({'find_tags': item['find_tags'], **corpus[item['id']]})
 
     return tuple(filter(lambda i: i['id'] != searched_item['id'], found_result))
 
