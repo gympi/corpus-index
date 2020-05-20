@@ -1,0 +1,31 @@
+{% extends "./layout.html" %}
+
+{% block content %}
+{% autoescape None %}
+<div class="jumbotron">
+    <div class="container">
+        <h4 class="display-5">{{searched_article['title']}}</h4>
+        <p>{{searched_article['anons']}}</p>
+        <p>{{', '.join(searched_article['tags'])}}</p>
+        <p><span class="glyphicon glyphicon-refresh"></span><a class="btn btn-primary" href="" role="button">Random
+            article</a></p>
+    </div>
+</div> <!-- /jumbotron -->
+
+<div class="container">
+
+    {% for item in found_articles %}
+    <div class="row mx-md-n5">
+        <div class="col px-md-5">
+            <h4>{{item['title']}}</h4>
+            <p>{{item['anons']}}</p>
+            <p>Find tags: {{', '.join(item['find_tags'])}}</p>
+            <p>{{', '.join(item['tags'])}}</p>
+            <p><a class="btn btn-secondary" href="/article-tags-graph/{{item['id']}}" role="button">Search »</a></p>
+        </div>
+    </div>
+    <hr>
+    {% end %}
+
+</div> <!-- /container -->
+{% end %}

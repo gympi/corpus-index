@@ -2,3 +2,6 @@ pika
 python-dateutil
 terminaltables
 tornado
+numpy
+
+python-igraph

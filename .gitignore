@@ -132,3 +132,6 @@ dmypy.json
 !conf/.gitkeep
 conf/*
 #corpus/*
+
+article_graph.pickle
+twin_tags_index.pickle

@@ -1,19 +1,8 @@
 import itertools
 import pickle
-from typing import Set
 
-from corpus import read_corpus
-
-IGNORE_TAGS_FILE = "./artifacts/tags_ignore.txt"
-
-
-def get_ignore_tags() -> Set[str]:
-    try:
-        with open(IGNORE_TAGS_FILE, "r") as out_file:
-            return set(i.lower().strip() for i in out_file.readlines())
-    except:
-        # TODO: handle the error
-        return set()
+from graph_libs.corpus import read_corpus, read_ignore_tags
+from settings import TWIN_TAGS_INDEX_FILE
 
 
 def indexing(
@@ -21,7 +10,7 @@ def indexing(
         ignored_tags=None
 ):
     if not ignored_tags:
-        ignored_tags = get_ignore_tags()
+        ignored_tags = read_ignore_tags()
 
     # Build all tags list
     all_tags = [tag for item in read_corpus() for tag in item['tags'] if tag not in ignored_tags]
@@ -52,7 +41,7 @@ def indexing(
         if v[0] < 2:
             del formatted_tags[k]
 
-    with open('index.pickle', 'wb') as in_file:
+    with open(TWIN_TAGS_INDEX_FILE, 'wb') as in_file:
         pickle.dump(formatted_tags, in_file)
 
 

@@ -1,29 +1,27 @@
 #!/usr/bin/env python
-
+import inspect
 import sys
-import uuid
-from typing import IO, Generator
-import json
+import traceback
+from typing import Generator
 import os
 import argparse
 from dateutil.relativedelta import relativedelta
 import datetime
-from os import listdir
-from os.path import isfile, join
-
 
 import pickle
 
 # BEGIN Connection of the library with restrictions on the right to use
-sys.path.append('../../tvzvezda/libs/')
+from graph_libs.corpus import read_corpus, clear_corpus
+from settings import CORPUS_DIR
+
 try:
+    sys.path.append('../../tvzvezda/libs/')
     from tvzvezdaru_corpus_entity import ObjectsIndexStorage, ObjectIndexSerializer
-except:
-    pass
+except Exception as e:
+    print("Error trying to read file: \n{}: ".format(inspect.currentframe().f_code.co_name), e)
+    traceback.print_exc()
 # END
 
-
-CORPUS_DIR = './corpus'
 
 START_DATE = datetime.date(2020, 1, 1)
 END_DATE = datetime.date.today()
@@ -40,15 +38,6 @@ def get_month_range(start_date: datetime.date, end_date: datetime.date) -> Gener
     while current <= end:
         yield current
         current += relativedelta(months=1)
-
-
-def clear_corpus():
-    """
-    Remove all files in corpus dir
-    """
-    if os.path.exists(CORPUS_DIR):
-        for f in [f for f in os.listdir(CORPUS_DIR)]:
-            os.remove(os.path.join(CORPUS_DIR, f))
 
 
 class ObjectIndexSerializerExtend(ObjectIndexSerializer):
@@ -82,26 +71,6 @@ def build_corpus():
         # Save result to a pickle format
         with open(os.path.join(CORPUS_DIR, f'{date.strftime("%Y-%m-%d")}.pickle'), 'wb') as in_file:
             pickle.dump(serialized_result, in_file)
-
-
-def read_large_file(file_object: IO) -> Generator[str, None, None]:
-    """
-    Uses a generator to read a large file lazily
-    """
-    while True:
-        data = file_object.readline()
-        if not data:
-            break
-        yield data
-
-
-def read_corpus() -> Generator[dict, None, None]:
-    files = [f for f in listdir(CORPUS_DIR) if isfile(join(CORPUS_DIR, f))]
-
-    for _file in files:
-        with open(join(CORPUS_DIR, _file), 'rb') as out_file:
-            for out in pickle.load(out_file):
-                yield out
 
 
 def print_corpus(template: str):
