@@ -4,7 +4,7 @@ import random
 
 from terminaltables import AsciiTable
 
-from corpus import read_corpus
+from graph_libs.corpus import read_corpus
 
 
 class Corpus:
