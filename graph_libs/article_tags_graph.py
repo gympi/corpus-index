@@ -1,4 +1,4 @@
-import pickle
+# import pickle
 
 from igraph import Graph
 
@@ -8,8 +8,9 @@ from settings import ARTICLE_TAGS_GRAPH_FILE
 
 @timing
 def read_graph(path: str = ARTICLE_TAGS_GRAPH_FILE):
-    with open(path, 'rb') as out_file:
-        return pickle.load(out_file)
+    return Graph.Read_Pickle(path)
+    # with open(path, 'rb') as out_file:
+    #     return pickle.load(out_file)
 
 
 class ArticleTagsGraphSearch:

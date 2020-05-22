@@ -23,7 +23,7 @@ except Exception as e:
 # END
 
 
-START_DATE = datetime.date(2020, 1, 1)
+START_DATE = datetime.date(2020, 3, 1)
 END_DATE = datetime.date.today()
 
 

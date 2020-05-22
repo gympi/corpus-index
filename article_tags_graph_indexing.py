@@ -6,6 +6,7 @@ from igraph import Graph
 
 from graph_libs.corpus import read_corpus, read_ignore_tags
 from graph_libs.utils import timing
+from settings import ARTICLE_TAGS_GRAPH_FILE
 
 
 @timing
@@ -90,9 +91,10 @@ def create_graph2():
 
 
 @timing
-def save_graph_index(graph):
-    with open('article_graph.pickle', 'wb') as in_file:
-        pickle.dump(graph, in_file)
+def save_graph_index(graph: Graph):
+    graph.write_pickle(fname='article_tags_graph.pickle')
+    # with open('article_graph.pickle', 'wb') as in_file:
+    #     pickle.dump(graph, in_file)
 
 
 if __name__ == '__main__':
