@@ -25,6 +25,10 @@ class Paginator(tornado.web.UIModule):
         pages = int(math.ceil(results_count / page_size)) if results_count else 0
 
         def get_page_url(_page):
+            if _page is None:
+                _page = 1
+
+            _page = int(_page)
             # don't allow ?page=1
             if _page <= 1:
                 _page = None

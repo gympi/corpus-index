@@ -1,11 +1,21 @@
 {% if pages > 1 %}
 <div class="pagination pagination-centered">
-  <ul class="pagination">
-  <li class="page-item {% if not previous %}disabled{% end %}"><a class="page-link"  href="{{ get_page_url(previous) }}">&laquo;</a></li>
-  {% for page_num in range(1, pages + 1) %}
-  <li class="page-item {% if page_num == page %}active{% end %}"><a class="page-link" href="{{ get_page_url(page_num) }}">{{ page_num }}</a></li>
-  {% end %}
-  <li class="page-item {% if not next %}disabled{% end %}"><a class="page-link"  href="{{ get_page_url(next) }}">&raquo;</a></li>
-</ul>
+    <ul class="pagination">
+        <li class="page-item {% if not previous %}disabled{% end %}"><a class="page-link"
+                                                                        href="{{ get_page_url(previous) }}">&laquo;</a>
+        </li>
+        {% for page_num in range(1, pages + 1) %}
+
+          {% if page_num == page %}
+          <li class="page-item active"><a class="page-link" href="#">{{ page_num }}<span class="sr-only">(current)</span></a>
+          </li>
+          {% elif page_num > (page -3) and page_num < (page + 3) %}
+          <li class="page-item"><a class="page-link" href="{{ get_page_url(page_num) }}">{{ page_num }}</a></li>
+          {% end %}
+
+        {% end %}
+        <li class="page-item {% if not next %}disabled{% end %}"><a class="page-link" href="{{ get_page_url(next) }}">&raquo;</a>
+        </li>
+    </ul>
 </div>
 {% end %}

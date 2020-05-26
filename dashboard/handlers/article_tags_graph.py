@@ -14,7 +14,10 @@ class ArticleTagsGraphHandler(PaginationHandlerMixin, BaseHandler):
         try:
             searched_article = self.corpus[int(idx)]
         except:
-            searched_article = random.choice(self.corpus)
+            location = self.request.protocol + '://' + self.request.host + self.request.path + str(random.choice(self.corpus)['id'])
+            self.set_header('X-VF-Staging-Redirect', location)
+            self.redirect(location)
+            return
 
         searcher = ArticleTagsGraphSearch(self.graph)
 
