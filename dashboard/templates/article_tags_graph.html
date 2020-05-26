@@ -1,4 +1,4 @@
-{% extends "./layout.html" %}
+{% extends "../templates/layout.html" %}
 
 {% block content %}
 {% autoescape None %}
@@ -26,6 +26,8 @@
     </div>
     <hr>
     {% end %}
+
+    {% module Paginator(pagination.page, pagination.page_size, count_founds) %}
 
 </div> <!-- /container -->
 {% end %}

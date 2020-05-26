@@ -1,10 +1,10 @@
 import random
 
 from graph_libs.article_tags_graph import ArticleTagsGraphSearch
-from dashboard.handlers.base import BaseHandler
+from dashboard.handlers.base import BaseHandler, PaginationHandlerMixin
 
 
-class ArticleTagsGraphHandler(BaseHandler):
+class ArticleTagsGraphHandler(PaginationHandlerMixin, BaseHandler):
     def initialize(self, corpus, graph, ignored_tags):
         self.corpus = corpus
         self.graph = graph
@@ -30,5 +30,6 @@ class ArticleTagsGraphHandler(BaseHandler):
         self.on_write_page('article_tags_graph.html', {
             'searched_article': searched_article,
             'found_articles': found_articles,
-            'count_founds': len(target_articles)
+            'count_founds': len(target_articles),
+            'pagination': self.pagination,
         })
