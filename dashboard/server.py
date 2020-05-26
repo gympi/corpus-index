@@ -30,10 +30,10 @@ class IndexRedirectHandler(BaseHandler):
 
 def make_app():
     return tornado.web.Application([
-        (r"/", IndexRedirectHandler),
-        (r"/twin-tags-graph/(\d+)?", TwinTagsGraphHandler,
-         dict(corpus=corpus, index=twin_tags_index)),
+        tornado.web.url(r"/", IndexRedirectHandler),
+        tornado.web.url(r"/twin-tags-graph/(\d+)?", TwinTagsGraphHandler,
+         dict(corpus=corpus, index=twin_tags_index), name="twin-tags-graph"),
 
-        (r"/article-tags-graph/(\d+)?", ArticleTagsGraphHandler,
-         dict(corpus=corpus, graph=read_graph(), ignored_tags=read_ignore_tags())),
+        tornado.web.url(r"/article-tags-graph/(\d+)?", ArticleTagsGraphHandler,
+         dict(corpus=corpus, graph=read_graph(), ignored_tags=read_ignore_tags()), name="article-tags-graph"),
     ], **settings)

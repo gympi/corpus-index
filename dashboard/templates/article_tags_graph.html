@@ -4,10 +4,11 @@
 {% autoescape None %}
 <div class="jumbotron">
     <div class="container">
+        <h5 class="display-5 text-right">Algoritm: article-tags</h5>
         <h4 class="display-5">{{searched_article['title']}}</h4>
         <p>{{searched_article['anons']}}</p>
         <p>{{', '.join(searched_article['tags'])}}</p>
-        <p><span class="glyphicon glyphicon-refresh"></span><a class="btn btn-primary" href="" role="button">Random
+        <p><span class="glyphicon glyphicon-refresh"></span><a class="btn btn-primary" href="{{reverse_url('article-tags-graph', 1)}}" role="button">Random
             article</a></p>
     </div>
 </div> <!-- /jumbotron -->
